@@ -1,6 +1,5 @@
 library(ggplot2)
 library(dplyr)
-library(tidyr)
 library(gganimate)
 library(hrbrthemes)
 
@@ -29,7 +28,24 @@ anim <- ggplot(data = covid_data_aggregate, aes(x = Date, y = Country.Total, col
   theme_ipsum() +
   transition_reveal(Date)
 
-anim
+animate(anim, end_pause = 20)
 
-anim_save("covid.gif", anim)
+anim_save("covid.gif")
 
+
+# ---- Demonstrating Province.State non-aggregated issue ----
+
+canada_data <- covid_data %>% filter(Country.Region == "Canada")
+
+canada_anim <- ggplot(data = canada_data, aes(x = Date, y = Confirmed, color = Country.Region)) +
+  geom_line(size = 1, alpha = 0.8, show.legend = TRUE) +
+  geom_point() +
+  labs(title = "COVID-19 Confirmed Cases",
+       subtitle = "2020-01 through 2022-04",
+       x = "Date",
+       y = "Confirmed Cases",
+       color = "Country") +
+  theme_ipsum() +
+  transition_reveal(Date)
+
+anim_save("canada.gif", canada_anim)
